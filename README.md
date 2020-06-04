@@ -1,2 +1,2 @@
 # analisi_testo
-progetto di unimore fatto con django e nltk
+progetto di analisi testo fatto con django e nltk
