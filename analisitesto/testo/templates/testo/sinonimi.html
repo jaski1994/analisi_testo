@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+{% block title  %}Sinonimi per{% endblock %}
+
+{% block content %}
+  <div id="container" class="container mt-md-2">
+    <input type="button" action="action"  onclick="window.history.go(-1); return false;" class="btn btn-primary" value="Indietro"></input>
+    <br>
+    <br><h3 style="align-content: center">Sinonimi per {{ termine.parola }}:</h3> <br>
+      {% for sinonimo in sinonimi %}
+      <h5 style="align-content: center">{{ sinonimo }}</h5>
+      {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load django_tables2 %}
+
+{% block title %}Visualizza risultati{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3 style="align-items: center; padding-top: 10px;">Risultati ricerca</h3>
+        <div class="row" style="margin-bottom: 10px; margin-top:10px; white-space:nowrap; flex-direction: row;">
+            <div class="col" style="flex: 1; padding: 10px; flex-shrink: 3; justify-content: center; flex-grow: unset">
+                <a href="search">
+                    <button class="btn btn-primary" type="submit" >Torna alla ricerca</button>
+                </a>
+            </div>
+
+            <div class="col" style="align-content: space-evenly; flex-direction: row; flex-wrap: nowrap; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;">
+                {% if titolo == "" and autore == "" and fonte == "" and data == "" %}
+                    <h5 style="float: left">Risultati: tutti i testi presenti nella piattaforma</h5>
+                {% else %}
+                    <h5>Risultati per:
+
+                    {% if titolo != "" %}
+                        {{ titolo }}(titolo),
+                    {% endif %}
+
+                    {% if fonte != "" %}
+                        {{ fonte }}(fonte),
+                    {% endif %}
+
+                    {% if autore != "" %}
+                        {{ autore }}(autore),
+                    {% endif %}
+
+                    {% if data != "" %}
+                        {{ data }}(data)
+                    {% endif %}
+
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row-md-1"></div>
+
+    <div class="container">
+        {% render_table table %}
+    </div>
+
+{% endblock %}

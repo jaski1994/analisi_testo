@@ -1,0 +1,32 @@
+{% extends 'register/register.html' %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+<div class="container-fluid" id="div-details" style="text-align: center">
+{% block title %}
+    <br><br>
+    <h1>Analizza il vocabolario</h1>
+    <br><br>
+    <h2>Login</h2>
+    <br><br>
+
+{% endblock %}
+
+</div>
+
+
+<div class="container">
+{% block content %}
+    <form method="POST" class="form-group">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <br><br>
+        <button type="submit" class="btn btn-success" style="margin-left:auto;margin-right:auto;display:block;width:100px">Login</button>
+        <div style="text-align:center;margin-left:auto;margin-right:auto;display:block">
+            <br>
+            <a href="{% url 'testo:register' %}" type="submit" class="btn btn-success" style="width:100px">Registrati</a>
+            <br>
+        </div>
+    </form>
+{% endblock %}
+</div>

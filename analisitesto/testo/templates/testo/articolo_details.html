@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+{% block title %}Dettagli articolo{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <input type="button" action="action"  onclick="window.history.go(-1); return false;" class="btn btn-primary" value="Indietro"  style="margin-bottom: 10px; margin-top:10px;">
+    </div>
+
+    <div class="container-fluid" id="div-details" style="text-align: center">
+        <h1>{{ articolo.titolo }}</h1>
+        <span>Complessità</span>
+        <p style="font-size:100px">{{ articolo.complessita }}</p>
+    </div>
+
+    <div class="container" id="div-metadata">
+        <form>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="source-out">Fonte</label>
+                    <br>
+                    <input type="text" id="source-out" disabled value="{{ articolo.fonte }}" style="width: 90%; text-align: center">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="date-out">Data</label>
+                    <br>
+                    <input type="text" id="date-out" disabled value="{{ articolo.data }}" style="width: 90%; text-align: center">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="user-out">Autore</label>
+                    <br>
+                    <input type="text" id="user-out" disabled value=" {{ articolo.autore }}" style="width: 90%; text-align: center">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="input-date-out">Data inserimento</label>
+                    <br>
+                    <input type="text" id="input-date-out" disabled value="{{ articolo.data_caricamento }}" style="width: 90%; text-align: center">
+                </div>
+            </div>
+            <br>
+            <div class="form-row" style="text-align: center">
+                <div class="form-group col-md-6">
+                    <label for="qnt-out">Quantità di termini </label>
+                    <br>
+                    <input type="text" id="qnt-out" disabled value="{{ articolo.quantita_termini }}" style="text-align: center">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="frq-out">Frequenza media</label>
+                    <br>
+                    <input type="text" id="frq-out" disabled value="{{ articolo.frequenza_media }}" style="text-align: center">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <br> <br>
+        <h4>Grafico dei termini più frequenti e rilevanti:</h4>
+        <canvas id="myChart" ></canvas>
+    </div>
+    <div id="tab-terms-list" class="container">
+        <table class="table table-striped table-bordered table-sm" data-toggle="table" id="dtTab" style="width: 99%">
+            <thead>
+            <tr>
+                <th scope="col" data-sortable="true">Parola</th>
+                <th scope="col" data-sortable="true">Frequenza</th>
+                <th scope="col">Traduzione</th>
+                <th scope="col">Sinonimi</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in termini %}
+                {% if row.parola not in blacklist_utente %}
+                    <tr>
+                        <td scope="row" style="width: 55%">{{ row.parola }}</td>
+                        <td style="width: 30%">{{ row.occorrenze }}</td>
+                        <!-- Passare alla pagina di traduzione il termine da tradurre-->
+                        <td style="width: 15%">
+                            <a class="btn btn-info btn-sm" href="{% url 'testo:translate-termine' row.id %}">Traduci</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-info btn-sm" href="{% url 'testo:sinonimi' row.id %}">Sinonimi</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#dtTab').DataTable({
+                "aaSorting": [[0, 'asc']],
+                "ordering": true,
+                "bLengthChange": false,
+                "paging": false,
+                "autoWidth": false,
+                "bSortable": true,
+                "info": false,
+                "aoColumnDefs": [
+                    { "aTargets": [ 0 ], "bSortable": true },
+                    { "aTargets": [ 1 ], "bSortable": true }
+                ]
+            });
+
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(function() {
+            var text=[], text_clean=[] ;
+            var items=[], dati_clean=[];
+            {% for row in termini %}
+                {% if row.parola not in blacklist_utente %}
+                    text.push("{{ row.parola }}");
+                    items.push("{{ row.occorrenze}}")
+                {% endif %}
+            {% endfor %}
+
+
+            //var items = [5,3,7,6,2,9];
+            function swap(items, leftIndex, rightIndex, text){
+                var temp = items[leftIndex];
+                items[leftIndex] = items[rightIndex];
+                items[rightIndex] = temp;
+
+                var temp2 = text[leftIndex];
+                text[leftIndex] = text[rightIndex];
+                text[rightIndex] = temp2;
+            }
+            function partition(items, left, right, text) {
+                var pivot   = items[Math.floor((right + left) / 2)], //middle element
+                    i       = left, //left pointer
+                    j       = right; //right pointer
+                while (i <= j) {
+                    while (items[i] < pivot) {
+                        i++;
+                    }
+                    while (items[j] > pivot) {
+                        j--;
+                    }
+                    if (i <= j) {
+                        swap(items, i, j, text); //swapping two elements
+                        i++;
+                        j--;
+                    }
+                }
+                return i;
+            }
+
+            function quickSort(items, left, right, text) {
+                var index;
+                if (items.length > 1) {
+                    index = partition(items, left, right, text); //index returned from partition
+                    if (left < index - 1) { //more elements on the left side of the pivot
+                        quickSort(items, left, index - 1, text);
+                    }
+                    if (index < right) { //more elements on the right side of the pivot
+                        quickSort(items, index, right, text);
+                    }
+                }
+                //return items, text;
+            }
+            //converte string to int
+            for(var j=0;j < items.length;j++){
+                items[j] = parseInt(items[j])
+            }
+            // first call to quick sort
+            quickSort(items, 0, items.length - 1, text);
+
+            {# items = array con le occorrenze -- text = array con i termini #}
+            {# L'indice i si riferisce alla stessa parola in entrambi gli array #}
+            if(text.length <= 40){
+                text_clean = text;
+                dati_clean = items;
+            }
+            else{
+                for( var i= 0;i < items.length; i++){
+                    if(items[i] > {{ criterio_grafico }} || (text[i].length > 5 )  ){
+                        text_clean.push(text[i]);
+                        dati_clean.push(items[i]);
+                    }
+
+                }
+            }
+
+            text_clean.reverse();
+            dati_clean.reverse();
+            text_clean = text_clean.slice(0, 40);
+            dati_clean = dati_clean.slice(0, 40);
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'bar',
+
+                // The data for our dataset
+                data: {
+                    labels: text_clean,
+                    datasets: [{
+                        label: ['Frequenza'],
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: dati_clean,
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                max: Math.max.apply(null, items)+3,
+                                min: 0,
+                                stepSize: 1
+                            }
+                        }]
+                    }
+                }
+            });
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html'%}
+{% load crispy_forms_filters %}
+{% load django_tables2 %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+          integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+          crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+</head>
+{% block title %}User Insert articolo{% endblock %}
+
+{% block content %}
+    <div class="container mt-md-1">
+        <h3 style="align-items: center; padding-top: 10px;">Testi personali</h3>
+        <a href="{% url 'testo:profile' %}">
+                <button class="btn btn-primary" type="submit" >Torna al profilo</button>
+        </a>
+        <div><br></div>
+
+        {% render_table table %}
+    </div>
+{% endblock %}
+

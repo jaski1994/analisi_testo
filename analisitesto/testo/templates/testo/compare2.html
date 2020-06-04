@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Compara{% endblock %}
+
+
+{% block content %}
+    <div class="container mt-md-2">
+        <h3>Inserisci i dati del testo da confrontare a "{{ articolo1.titolo }}"</h3>
+        <p style="margin-left:auto;margin-right:auto;display:block;font-size: small">*Facendo una ricerca con tutti i campi vuoti accederà all'elenco di tutti i testi presenti sulla piattaforma</p>
+        <form  method="get" id="search-form" name="q" >
+            {{ form|crispy}}
+            <input class="btn btn-success" type="submit" value="Cerca" style="margin-left:auto;margin-right:auto;display:block;"></<input>
+        </form>
+    </div>
+{% endblock %}

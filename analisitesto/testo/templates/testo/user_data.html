@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load django_tables2 %}
+
+
+{% load static %}
+<!DOCTYPE html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+          integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+          crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="{% static 'css/style.css' %}">
+</head>
+
+{% block content %}
+    <div class="container">
+        <div class="row my-2">
+            <div class="col-lg-8 order-lg-2">
+                <div class="tab-content py-4">
+                    <div class="tab-pane active" id="profile">
+                        <h2 class="mb-3">Profilo utente</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>Username</h4>
+                                <p>
+                                    {{ logged_user_username}}
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <h4>Email</h4>
+                                <p>
+                                    {{ email }}
+                                </p>
+                            </div>
+
+                            <div class="col-md-12">
+                                <a href="{% url 'testo:load-text' %}" type="submit" class="btn btn-success" >Visualizza testi</a>
+                            </div>
+                            <div><br></div>
+                            <br><br>
+                            <div class="col-md-12">
+                                <a href="{% url 'testo:user-blacklist' %}" type="submit" class="btn btn-success" >Gestisci blacklist</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

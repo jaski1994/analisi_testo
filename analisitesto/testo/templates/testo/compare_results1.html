@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load django_tables2 %}
+
+{% block title %}Visualizza risultati{% endblock %}
+
+{% block content %}
+    <div class="container mt-md-2">
+        <h3>Selezionare il primo testo da confrontare</h3>
+        <div class="row" style="margin-bottom: 10px; margin-top:10px; white-space:nowrap; flex-direction: row;">
+            <div class="col" style="flex: 1; padding: 10px; flex-shrink: 3; justify-content: center; flex-grow: unset">
+            <a href="{% url 'testo:articolo-compare' %}">
+                <button class="btn btn-primary" type="submit" >Torna alla ricerca</button>
+            </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-md-1"></div>
+
+    <div class="container">
+        {% render_table table %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,203 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/57632e5759.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+
+
+        <!-- Parte per caricamento javascript della translate-->
+        {% block extrahead %} {% endblock %}
+
+        <style>
+            @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+            body {
+             font-family: "Poppins" !important;
+            }
+
+            .my-navbar {
+              box-shadow: 0px 10px 30px rgba(216, 216, 216, 0.45);
+              position: sticky;
+              width: 100%;
+              z-index: 10;
+            }
+
+            .navbar-brand {
+              font-weight: bold;
+            }
+            .navbar-brand img {
+              width: 50px;
+            }
+
+            .nav-link {
+              border-bottom: 4px solid white;
+              margin-right: 24px;
+              transition: 0.3s ease;
+              padding: 5px;
+            }
+            .nav-link:hover {
+              color: black;
+              border-bottom: 4px solid #eb4027;
+            }
+            .nav-active a {
+              color: black !important;
+              font-weight: 600;
+              border-bottom: 4px solid #eb4027;
+            }
+            
+        </style>
+        <title>{% block title %} {% endblock %}</title>
+    </head>
+    <body>
+        <nav class="navbar my-navbar navbar-expand-lg navbar-light bg-white">
+            <div class="container">
+                <a class="navbar-brand">Analizza il vocabolario</a>
+                <button
+                    class="navbar-toggler border-0"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span
+                        class="iconify bar-icon"
+                        data-icon="fa-solid:bars"
+                        data-inline="false">
+                    </span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"> <!--Possibile aggiunta attributo nav-active-->
+                            <a class="nav-link" href="{% url 'testo:articolo-add' %}">Inserisci<span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'testo:articolo-meta-search' %}">Ricerca</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'testo:articolo-compare' %}">Confronta</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'testo:statistiche-articoli' %}">Statistiche</a>
+                        </li>
+                    </ul>
+                </div>
+                <ul class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ logged_user_username }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                   <a class="dropdown-item" href={% url 'testo:profile' %}>Mio profilo</a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item" href="{% url 'testo:logout' %}">Logout</a>
+
+                </div>
+                </ul>
+            </div>
+        </nav>
+
+        <div >
+            {% block content %} {% endblock %}
+        </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <style type="text/css" title="currentStyle">
+        @import "../../media/css/demo_page.css";
+        @import "../../media/css/demo_table.css";
+    </style>
+    <script type="text/javascript" language="javascript" src="../../media/js/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="../../media/js/jquery.dataTables.js"></script>
+
+    <!-- Fengyuan Chen's Datepicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css" integrity="sha256-b88RdwbRJEzRx95nCuuva+hO5ExvXXnpX+78h8DjyOE=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js" integrity="sha256-/7FLTdzP6CfC1VBAj/rsp3Rinuuu9leMRGd354hvk0k=" crossorigin="anonymous"></script>
+    <!--Passa lo script al template base-->
+
+  <!--PERSONAL SCRIPT JavaScript-->
+  <!-- Gestisce input lingua di partenza, lingua di destinazione e termine da tradurre per poi passarli alle API-->
+  <script type="text/javascript">
+
+      $(function () {
+        $("#id_data").datepicker({
+          format:'yyyy-mm-dd',
+        });
+      });
+
+    $(function() {
+      var lang1 = ["it"];
+      var lang1txt = ["Italiano"];
+      var lang2 = ["en", "fr", "de", "zh-cn", "ko", "es", "pt", "ru", "af", "hr", "ja", "da", "nl", "ga", "pl","sq", "mt", "no", "hi", "id", "tl", "fi", "hu", "is", "ro", "sl", "sw", "sv", "tr"];
+      var lang2txt = ["Inglese", "Francese", "Tedesco", "Cinese", "Coreano", "Spagnolo", "Portoghese", "Russo", "Afrikan", "Croato", "Giapponese", "Danese", "Olandese", "Irlandese", "Polacco", "Albanese", "Maltese", "Norvegese", "Indiano", "Indonesiano", "Filippino", "Finlandese", "Ungherese", "Islandese", "Rumeno", "Sloveno", "Swahili", "Svedese", "Turco"];
+      var elm = {
+        "lang1": $("#lang1"),
+        "lang2": $("#lang2"),
+        "user": $("#lang1"),
+        "output": $("#lang2"),
+        "userInput": $("#user"),
+        "langOutput": $("#output")
+      };
+
+      for (let i in lang1) {
+        elm.lang1.append("<option value='" + lang1[i] + "'>" + lang1txt[i] + "</option>");
+      }
+
+      for (let i in lang2) {
+        elm.lang2.append("<option value='" + lang2[i] + "'>" + lang2txt[i] + "</option>");
+      }
+
+      function translate() {
+        var format = elm
+          .userInput
+          .val()
+          .replace(/ /g, '%20');
+
+        $.getJSON("https://translate.googleapis.com/translate_a/single?client=gtx&sl=" + elm.user.val() + "&tl=" + elm.output.val() + "&dt=t&dt=t&q=" + format,
+          function(JSON) {
+            var convert = JSON.toString();
+            var temp = convert.split(",");
+            elm.langOutput.val(temp[0]);
+          });
+
+      }
+
+      $("#translate").on("click", function() {
+        translate();
+      });
+
+      //funzione presente per vecchia feature di clear dei campi
+      $("#clear").on("click", function() {
+        elm.userInput.val(null);
+        elm.langOutput.val(null);
+      });
+
+      setInterval(function() {
+        $("#from").text(
+          $("#lang1").val());
+        $("#to").text(
+          $("#lang2").val());
+      }, 10);
+    });
+    
+  </script>
+
+    </body>
+</html>

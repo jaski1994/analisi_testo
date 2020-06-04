@@ -1,0 +1,634 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>testo.views &#8212; analisitesto 1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">analisitesto 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for testo.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">floor</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">truncate</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">user_logged_out</span><span class="p">,</span> <span class="n">authenticate</span><span class="p">,</span> <span class="n">login</span>
+<span class="kn">from</span> <span class="nn">django.db.models.functions</span> <span class="kn">import</span> <span class="n">Length</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">get_list_or_404</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span><span class="p">,</span> <span class="n">reverse_lazy</span>
+<span class="kn">from</span> <span class="nn">django.utils.decorators</span> <span class="kn">import</span> <span class="n">method_decorator</span>
+<span class="kn">from</span> <span class="nn">django.views.generic</span> <span class="kn">import</span> <span class="n">DeleteView</span>
+<span class="kn">from</span> <span class="nn">django_tables2</span> <span class="kn">import</span> <span class="n">SingleTableView</span><span class="p">,</span> <span class="n">TemplateColumn</span><span class="p">,</span> <span class="n">RequestConfig</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">auth</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AnonymousUser</span><span class="p">,</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">django_tables2.utils</span> <span class="kn">import</span> <span class="n">A</span>
+<span class="kn">from</span> <span class="nn">nltk.lm.vocabulary</span> <span class="kn">import</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.clickjacking</span> <span class="kn">import</span> <span class="n">xframe_options_exempt</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">ArticoloForm</span><span class="p">,</span> <span class="n">ArticoloSearchForm</span><span class="p">,</span> <span class="n">RegisterForm</span><span class="p">,</span> <span class="n">BlacklistForm</span>
+<span class="kn">from</span> <span class="nn">.elaborate_text</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+<span class="kn">import</span> <span class="nn">django_tables2</span> <span class="k">as</span> <span class="nn">tables</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django_tables2</span> <span class="kn">import</span> <span class="n">RequestConfig</span>
+
+<span class="c1"># Create your views here.</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Articolo</span><span class="p">,</span> <span class="n">Termine</span><span class="p">,</span> <span class="n">Blacklist</span>
+
+
+<div class="viewcode-block" id="homepage"><a class="viewcode-back" href="../../index.html#testo.views.homepage">[docs]</a><span class="k">def</span> <span class="nf">homepage</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        homepage la pagina principale</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;registration/login.html&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="articolo_insert"><a class="viewcode-back" href="../../index.html#testo.views.articolo_insert">[docs]</a><span class="nd">@login_required</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">articolo_insert</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Richiesta di inserimento articolo con i vari fields</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (list): con i dati ricevuti dal utente</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            basestring : messaggio sul successo del dato o errore su dati sbagliati</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#importato file parole comuni in italiano ed inserito in lista</span>
+    <span class="n">module_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>  <span class="c1"># get current directory</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">module_dir</span><span class="p">,</span> <span class="s1">&#39;1000_parole_italiane_comuni.txt&#39;</span><span class="p">)</span>
+    <span class="n">list_common_words</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">importfile</span><span class="p">:</span>
+       <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">importfile</span><span class="p">:</span>
+           <span class="n">list_common_words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ArticoloForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">elaborator</span> <span class="o">=</span> <span class="n">Text_elaborator</span><span class="p">()</span>
+            <span class="n">elaborator</span><span class="o">.</span><span class="n">common_words</span> <span class="o">=</span> <span class="n">list_common_words</span>
+            <span class="n">articolo</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">articolo</span><span class="o">.</span><span class="n">data_caricamento</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">elaborator</span><span class="o">.</span><span class="n">chars_to_avoid</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_cart&#39;</span><span class="p">)</span>
+            <span class="n">elaborator</span><span class="o">.</span><span class="n">elaborate_text</span><span class="p">(</span><span class="n">articolo</span><span class="o">.</span><span class="n">testo</span><span class="p">)</span>
+            <span class="n">articolo</span><span class="o">.</span><span class="n">frequenza_media</span> <span class="o">=</span> <span class="n">elaborator</span><span class="o">.</span><span class="n">average_frequency</span>
+            <span class="n">articolo</span><span class="o">.</span><span class="n">quantita_termini</span> <span class="o">=</span> <span class="n">elaborator</span><span class="o">.</span><span class="n">term_count</span>
+            <span class="n">articolo</span><span class="o">.</span><span class="n">complessita</span> <span class="o">=</span> <span class="n">elaborator</span><span class="o">.</span><span class="n">calculate_complexity</span><span class="p">()</span>
+            <span class="n">articolo</span><span class="o">.</span><span class="n">autore</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+            <span class="n">articolo</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="c1">#print(elaborator.phrases_number)</span>
+
+            <span class="n">termini_con_frequenze</span> <span class="o">=</span> <span class="n">elaborator</span><span class="o">.</span><span class="n">terms_with_frequency</span>
+            <span class="k">for</span> <span class="p">[</span><span class="n">parola</span><span class="p">,</span> <span class="n">occorrenza</span><span class="p">]</span> <span class="ow">in</span> <span class="n">termini_con_frequenze</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">termine</span> <span class="o">=</span> <span class="n">Termine</span><span class="p">()</span>
+                <span class="n">termine</span><span class="o">.</span><span class="n">articolo</span> <span class="o">=</span> <span class="n">articolo</span>
+                <span class="n">termine</span><span class="o">.</span><span class="n">parola</span> <span class="o">=</span> <span class="n">parola</span>
+                <span class="n">termine</span><span class="o">.</span><span class="n">occorrenze</span> <span class="o">=</span> <span class="n">occorrenza</span>
+                <span class="n">termine</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Salvataggio ha avuto successo!&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;testo:articolo-add&#39;</span><span class="p">)</span>  <span class="c1"># rimanda alla pagina di inserimento</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Salvataggio non ha avuto successo!&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ArticoloForm</span><span class="p">()</span>
+    <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/articolo_add.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="articolo_details"><a class="viewcode-back" href="../../index.html#testo.views.articolo_details">[docs]</a><span class="nd">@login_required</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">articolo_details</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Renderizza la pagina dei dettagli in seguito al click su un risultato di ricerca</span>
+<span class="sd">    che mostra il grafico , frequenza media e complessità</span>
+<span class="sd">    :param request: id</span>
+<span class="sd">    :return: Ritorna la pagina renderizzata</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#articolo = Articolo.objects.get(id=id)</span>
+    <span class="n">articolo</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Articolo</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+
+    <span class="n">frequenza_media_float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">articolo</span><span class="o">.</span><span class="n">frequenza_media</span><span class="p">)</span>
+    <span class="n">criterio_grafico</span> <span class="o">=</span> <span class="n">floor</span><span class="p">(</span><span class="n">frequenza_media_float</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">termini</span> <span class="o">=</span> <span class="n">Termine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">articolo_id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+    <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+
+    <span class="c1"># Selezione dei termini e relative occorrenze da visualizzare escludendo quelli presenti nella blacklist</span>
+    <span class="n">logged_user_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
+    <span class="n">blacklist_utente</span> <span class="o">=</span> <span class="n">Blacklist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id_utente</span><span class="o">=</span><span class="n">logged_user_id</span><span class="p">)</span>
+    <span class="n">blacklist_utente_str</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blacklist_utente</span><span class="p">:</span>
+        <span class="n">blacklist_utente_str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;articolo&#39;</span><span class="p">:</span> <span class="n">articolo</span><span class="p">,</span> <span class="s1">&#39;termini&#39;</span><span class="p">:</span> <span class="n">termini</span><span class="p">,</span><span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">,</span>
+               <span class="s1">&#39;criterio_grafico&#39;</span><span class="p">:</span> <span class="n">criterio_grafico</span><span class="p">,</span> <span class="s1">&#39;blacklist_utente&#39;</span><span class="p">:</span> <span class="n">blacklist_utente_str</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/articolo_details.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="register"><a class="viewcode-back" href="../../index.html#testo.views.register">[docs]</a><span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Funzione che si occupa della registrazione dell&#39;utente all&#39;interno della piattaforma e gestisce</span>
+<span class="sd">        anche il processo di login</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">RegisterForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">error_messages</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">username</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+            <span class="n">email_user</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
+            <span class="n">raw_password</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;password1&#39;</span><span class="p">)</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">email_user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">raw_password</span><span class="p">)</span>
+            <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;testo:login&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">RegisterForm</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;register/register.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="ResultsTable"><a class="viewcode-back" href="../../index.html#testo.views.ResultsTable">[docs]</a><span class="k">class</span> <span class="nc">ResultsTable</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">Table</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Definisce tabella personalizzata per visualizzare i risultati della ricerca</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">DateTimeColumn</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;d/m/Y&#39;</span><span class="p">)</span>
+    <span class="n">data_caricamento</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">DateTimeColumn</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;d/m/Y&#39;</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Articolo</span>
+        <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;django_tables2/bootstrap4.html&quot;</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;titolo&quot;</span><span class="p">,</span> <span class="s2">&quot;fonte&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;autore&quot;</span><span class="p">,</span> <span class="s2">&quot;complessita&quot;</span><span class="p">,</span> <span class="s2">&quot;data_caricamento&quot;</span><span class="p">)</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;table table-striped table-bordered sortable&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;data-toggle&quot;</span><span class="p">:</span> <span class="s2">&quot;table&quot;</span>
+                 <span class="p">}</span>
+
+    <span class="n">detail</span> <span class="o">=</span> <span class="n">TemplateColumn</span><span class="p">(</span><span class="n">exclude_from_export</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;testo/detail.html&#39;</span><span class="p">,</span> <span class="n">orderable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ResultsTableCompare"><a class="viewcode-back" href="../../index.html#testo.views.ResultsTableCompare">[docs]</a><span class="k">class</span> <span class="nc">ResultsTableCompare</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">Table</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Definisce tabella personalizzata per visualizzare i risultati della ricerca del primo articolo da comparare</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Articolo</span>
+        <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;django_tables2/bootstrap4.html&quot;</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;titolo&quot;</span><span class="p">,</span> <span class="s2">&quot;fonte&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;autore&quot;</span><span class="p">,</span> <span class="s2">&quot;complessita&quot;</span><span class="p">,</span> <span class="s2">&quot;data_caricamento&quot;</span><span class="p">)</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;table table-striped table-bordered sortable&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;data-toggle&quot;</span><span class="p">:</span> <span class="s2">&quot;table&quot;</span>
+                 <span class="p">}</span>
+
+    <span class="n">detail</span> <span class="o">=</span> <span class="n">TemplateColumn</span><span class="p">(</span><span class="n">exclude_from_export</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;testo/compare_btn.html&#39;</span><span class="p">,</span> <span class="n">orderable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ResultsTableCompare2"><a class="viewcode-back" href="../../index.html#testo.views.ResultsTableCompare2">[docs]</a><span class="k">class</span> <span class="nc">ResultsTableCompare2</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">Table</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Definisce tabella personalizzata per visualizzare i risultati della ricerca del secondo articolo da comparare</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#titolo = tables.Column(verbose_name=&quot;Contact&quot;, order_by=(&#39;titolo_lower&#39;,))</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Articolo</span>
+        <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;django_tables2/bootstrap4.html&quot;</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;titolo&quot;</span><span class="p">,</span> <span class="s2">&quot;fonte&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;autore&quot;</span><span class="p">,</span> <span class="s2">&quot;complessita&quot;</span><span class="p">,</span> <span class="s2">&quot;data_caricamento&quot;</span><span class="p">)</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;table table-striped table-bordered sortable&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;data-toggle&quot;</span><span class="p">:</span> <span class="s2">&quot;table&quot;</span>
+                 <span class="p">}</span>
+
+    <span class="n">detail</span> <span class="o">=</span> <span class="n">TemplateColumn</span><span class="p">(</span><span class="n">exclude_from_export</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;testo/compare_btn2.html&#39;</span><span class="p">,</span> <span class="n">orderable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="articolo_meta_search"><a class="viewcode-back" href="../../index.html#testo.views.articolo_meta_search">[docs]</a><span class="nd">@login_required</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">articolo_meta_search</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Richiesta per la ricerca del articolo da visulaizare</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request (list): con i dati ricevuti dal utente per fare la ricerca</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            render : da fare vedere i risultati di ricerca sul successo del dato o messaggio errore su dati sbagliati</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;GET&#39;</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tank&#39;</span><span class="p">):</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ArticoloSearchForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="c1"># temp =</span>
+            <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;[@_!#$%^&amp;*()&lt;&gt;?/\|}{~:]&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+            <span class="n">articles_all</span> <span class="o">=</span> <span class="n">Articolo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="n">data_utenti</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;autore&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span>
+                                                                                                           <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;titolo&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;fonte&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;autore&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
+                    <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="n">articles</span> <span class="o">=</span> <span class="n">articles_all</span>
+            <span class="k">elif</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;titolo&#39;</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+                    <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;autore&#39;</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;fonte&#39;</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Non si possono mettere carattere speciali negli campi!&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;testo:articolo-meta-search&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">articles</span> <span class="o">=</span> <span class="n">articles_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">titolo__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;titolo&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span>
+                    <span class="n">fonte__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;fonte&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="n">data__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span>
+                    <span class="n">autore_id__in</span><span class="o">=</span><span class="n">data_utenti</span><span class="p">))</span>
+
+            <span class="c1"># Dati da visualizzare nell&#39;header dei risultati della ricerca</span>
+            <span class="n">titolo</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;titolo&#39;</span><span class="p">]</span>
+            <span class="n">fonte</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;fonte&#39;</span><span class="p">]</span>
+            <span class="n">autore</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;autore&#39;</span><span class="p">]</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+
+            <span class="n">table</span> <span class="o">=</span> <span class="n">ResultsTable</span><span class="p">(</span><span class="n">articles</span><span class="p">)</span>
+            <span class="n">RequestConfig</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">paginate</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;per_page&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+            <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;table&#39;</span><span class="p">:</span> <span class="n">table</span><span class="p">,</span> <span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">,</span> <span class="s1">&#39;titolo&#39;</span><span class="p">:</span> <span class="n">titolo</span><span class="p">,</span> <span class="s1">&#39;fonte&#39;</span><span class="p">:</span> <span class="n">fonte</span><span class="p">,</span>
+                       <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;autore&#39;</span><span class="p">:</span> <span class="n">autore</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/articolo_search_results.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ArticoloSearchForm</span><span class="p">()</span>
+
+    <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/articolo_meta_search.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="translate_termine"><a class="viewcode-back" href="../../index.html#testo.views.translate_termine">[docs]</a><span class="nd">@login_required</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">translate_termine</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id_term</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Google ha impostato delle limitazioni sull’utilizzo del servizio, quindi occorre evitare di</span>
+<span class="sd">        sovraccaricare il server di richieste traduzione dei termini</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">termine</span> <span class="o">=</span> <span class="n">Termine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_term</span><span class="p">)</span>
+    <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;termine&#39;</span><span class="p">:</span> <span class="n">termine</span><span class="p">,</span> <span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/translate_termine.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="logout"><a class="viewcode-back" href="../../index.html#testo.views.logout">[docs]</a><span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        funzione che si occupa del processo di logout dell&#39;utente</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="s1">&#39;is_authenticated&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">():</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">user_logged_out</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">sender</span><span class="o">=</span><span class="n">User</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">User</span><span class="p">)</span>
+    <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;user&#39;</span><span class="p">):</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">AnonymousUser</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="profile_view"><a class="viewcode-back" href="../../index.html#testo.views.profile_view">[docs]</a><span class="k">def</span> <span class="nf">profile_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        funzione che si occupa della visualizzazione del profilo utente e gestione degli termini della balcklist e</span>
+<span class="sd">        cnacelazionde degli articoli</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/user_data.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="loaded_text_view"><a class="viewcode-back" href="../../index.html#testo.views.loaded_text_view">[docs]</a><span class="k">def</span> <span class="nf">loaded_text_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        funzione che si occupa della visualizzazione dei testi caricati dall&#39;utente</span>
+
+<span class="sd">        :return tutti i testi caricati dall&#39;utente loggato</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+    <span class="n">loaded_articles</span> <span class="o">=</span> <span class="n">Articolo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">autore</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">ProfileTextTable</span><span class="p">(</span><span class="n">loaded_articles</span><span class="p">)</span>
+    <span class="n">RequestConfig</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">,</span> <span class="s1">&#39;table&#39;</span><span class="p">:</span> <span class="n">table</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/load_text.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProfileTextTable"><a class="viewcode-back" href="../../index.html#testo.views.ProfileTextTable">[docs]</a><span class="k">class</span> <span class="nc">ProfileTextTable</span><span class="p">(</span><span class="n">tables</span><span class="o">.</span><span class="n">Table</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Definisce una tabella personalizzata per visualizzare i testi inseriti dall&#39;utente attualmente loggato</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">DateTimeColumn</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;d/m/Y&#39;</span><span class="p">)</span>
+    <span class="n">data_caricamento</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">DateTimeColumn</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;d/m/Y&#39;</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Articolo</span>
+        <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;django_tables2/bootstrap4.html&quot;</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;titolo&quot;</span><span class="p">,</span> <span class="s2">&quot;fonte&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;autore&quot;</span><span class="p">,</span> <span class="s2">&quot;complessita&quot;</span><span class="p">,</span> <span class="s2">&quot;data_caricamento&quot;</span><span class="p">)</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;table table-striped table-bordered sortable&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;data-toggle&quot;</span><span class="p">:</span> <span class="s2">&quot;table&quot;</span>
+                 <span class="p">}</span>
+
+    <span class="n">detail</span> <span class="o">=</span> <span class="n">TemplateColumn</span><span class="p">(</span><span class="n">exclude_from_export</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;testo/detail.html&#39;</span><span class="p">,</span> <span class="n">orderable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">delete</span> <span class="o">=</span> <span class="n">TemplateColumn</span><span class="p">(</span><span class="n">exclude_from_export</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s1">&#39;testo/delete.html&#39;</span><span class="p">,</span> <span class="n">orderable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="articolo_delete"><a class="viewcode-back" href="../../index.html#testo.views.articolo_delete">[docs]</a><span class="k">def</span> <span class="nf">articolo_delete</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Elimina il testo corrispondente alla riga in cui viene premuto il tasto delete nella pagina che mostra la</span>
+<span class="sd">        tabella contenente i testi dell&#39;utente attualmente loggato.</span>
+<span class="sd">        :return: Ritorna la stessa pagina aggiornata</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Articolo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;testo:load-text&#39;</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">compare1</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;GET&#39;</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tank&#39;</span><span class="p">):</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ArticoloSearchForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="c1"># temp =</span>
+            <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+            <span class="n">articles_all</span> <span class="o">=</span> <span class="n">Articolo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="n">data_utenti</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;autore&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span>
+                                                                                                           <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;titolo&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;fonte&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;autore&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
+                    <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="n">articles</span> <span class="o">=</span> <span class="n">articles_all</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">articles</span> <span class="o">=</span> <span class="n">articles_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">titolo__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;titolo&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span>
+                    <span class="n">fonte__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;fonte&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="n">data__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span>
+                    <span class="n">autore_id__in</span><span class="o">=</span><span class="n">data_utenti</span><span class="p">))</span>
+
+            <span class="c1"># Dati da visualizzare nell&#39;header dei risultati della ricerca</span>
+            <span class="n">titolo</span> <span class="o">=</span> <span class="n">articles_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">titolo__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;titolo&#39;</span><span class="p">]))</span>
+            <span class="n">fonte</span> <span class="o">=</span> <span class="n">articles_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">fonte__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;fonte&#39;</span><span class="p">]))</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">articles_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">data__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]))</span>
+            <span class="n">autore</span> <span class="o">=</span> <span class="n">articles_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">autore_id__in</span><span class="o">=</span><span class="n">data_utenti</span><span class="p">))</span>
+
+            <span class="n">table</span> <span class="o">=</span> <span class="n">ResultsTableCompare</span><span class="p">(</span><span class="n">articles</span><span class="p">)</span>
+            <span class="c1">#RequestConfig(request).configure(table)</span>
+            <span class="n">RequestConfig</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">paginate</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;per_page&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+            <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;table&#39;</span><span class="p">:</span> <span class="n">table</span><span class="p">,</span> <span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">,</span> <span class="s1">&#39;titolo&#39;</span><span class="p">:</span> <span class="n">titolo</span><span class="p">,</span> <span class="s1">&#39;fonte&#39;</span><span class="p">:</span> <span class="n">fonte</span><span class="p">,</span>
+                       <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;autore&#39;</span><span class="p">:</span> <span class="n">autore</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/compare_results1.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ArticoloSearchForm</span><span class="p">()</span>
+
+    <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/compare1.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">compare2</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">articolo1</span> <span class="o">=</span> <span class="n">Articolo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;GET&#39;</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tank&#39;</span><span class="p">):</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ArticoloSearchForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+            <span class="n">articles_all</span> <span class="o">=</span> <span class="n">Articolo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="n">data_utenti</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;autore&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span>
+                                                                                                           <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;titolo&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;fonte&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;autore&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
+                    <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="n">articles</span> <span class="o">=</span> <span class="n">articles_all</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">articles</span> <span class="o">=</span> <span class="n">articles_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">titolo__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;titolo&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span>
+                    <span class="n">fonte__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;fonte&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span><span class="n">data__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">Q</span><span class="p">(</span>
+                    <span class="n">autore_id__in</span><span class="o">=</span><span class="n">data_utenti</span><span class="p">))</span>
+
+            <span class="c1"># Dati da visualizzare nell&#39;header dei risultati della ricerca</span>
+            <span class="n">titolo</span> <span class="o">=</span> <span class="n">articles_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">titolo__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;titolo&#39;</span><span class="p">]))</span>
+            <span class="n">fonte</span> <span class="o">=</span> <span class="n">articles_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">fonte__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;fonte&#39;</span><span class="p">]))</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">articles_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">data__icontains</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]))</span>
+            <span class="n">autore</span> <span class="o">=</span> <span class="n">articles_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">autore_id__in</span><span class="o">=</span><span class="n">data_utenti</span><span class="p">))</span>
+
+            <span class="n">table</span> <span class="o">=</span> <span class="n">ResultsTableCompare2</span><span class="p">(</span><span class="n">articles</span><span class="p">)</span>
+
+            <span class="n">RequestConfig</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">paginate</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;per_page&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+            <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;table&#39;</span><span class="p">:</span> <span class="n">table</span><span class="p">,</span> <span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">,</span> <span class="s1">&#39;titolo&#39;</span><span class="p">:</span> <span class="n">titolo</span><span class="p">,</span> <span class="s1">&#39;fonte&#39;</span><span class="p">:</span> <span class="n">fonte</span><span class="p">,</span>
+                       <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;autore&#39;</span><span class="p">:</span> <span class="n">autore</span><span class="p">,</span> <span class="s1">&#39;articolo1&#39;</span><span class="p">:</span> <span class="n">articolo1</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/compare_results2.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">ArticoloSearchForm</span><span class="p">()</span>
+
+    <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">,</span> <span class="s1">&#39;articolo1&#39;</span><span class="p">:</span> <span class="n">articolo1</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/compare2.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="compare_details"><a class="viewcode-back" href="../../index.html#testo.views.compare_details">[docs]</a><span class="nd">@login_required</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">compare_details</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">id1</span><span class="p">,</span> <span class="n">id2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Funzione che si occupa della rappresentazione dei dettagli nella pagina del confronto</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">articolo1</span> <span class="o">=</span> <span class="n">Articolo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id1</span><span class="p">)</span>
+    <span class="n">articolo2</span> <span class="o">=</span> <span class="n">Articolo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id2</span><span class="p">)</span>
+    <span class="n">termini1</span> <span class="o">=</span> <span class="n">Termine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">articolo_id</span><span class="o">=</span><span class="n">id1</span><span class="p">)</span>
+    <span class="n">termini2</span> <span class="o">=</span> <span class="n">Termine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">articolo_id</span><span class="o">=</span><span class="n">id2</span><span class="p">)</span>
+    <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+
+    <span class="c1"># Selezione dei termini e relative occorrenze da visualizzare escludendo quelli presenti nella blacklist</span>
+    <span class="n">logged_user_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
+    <span class="n">blacklist_utente</span> <span class="o">=</span> <span class="n">Blacklist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id_utente</span><span class="o">=</span><span class="n">logged_user_id</span><span class="p">)</span>
+    <span class="n">blacklist_utente_str</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">blacklist_utente</span><span class="p">:</span>
+        <span class="n">blacklist_utente_str</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;articolo1&#39;</span><span class="p">:</span> <span class="n">articolo1</span><span class="p">,</span> <span class="s1">&#39;articolo2&#39;</span><span class="p">:</span> <span class="n">articolo2</span><span class="p">,</span><span class="s1">&#39;termini1&#39;</span><span class="p">:</span> <span class="n">termini1</span><span class="p">,</span> <span class="s1">&#39;termini2&#39;</span><span class="p">:</span> <span class="n">termini2</span><span class="p">,</span>
+               <span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">,</span> <span class="s1">&#39;blacklist_utente&#39;</span><span class="p">:</span> <span class="n">blacklist_utente_str</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/compare_details.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="statistiche_articoli"><a class="viewcode-back" href="../../index.html#testo.views.statistiche_articoli">[docs]</a><span class="nd">@login_required</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">statistiche_articoli</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mostra le statistiche su tutti i testi e termini presenti nel database</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            render: ritorna la pagina renderizzata</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">articoli</span> <span class="o">=</span> <span class="n">Articolo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="c1"># Controllo per gestire il caso in cui non ci siano articoli inseriti</span>
+    <span class="k">if</span> <span class="n">articoli</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">complessita_media</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">quantita_media</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">frequenza_media</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">autore_max</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+        <span class="n">termini_con_frequenze</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">testi_tot</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">quantita_totale</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">termini</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Calcolo complessità media per tutti i testi e numero testi</span>
+        <span class="n">complessita_totale</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">testi_tot</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">articolo</span> <span class="ow">in</span> <span class="n">articoli</span><span class="p">:</span>
+            <span class="n">complessita_totale</span> <span class="o">+=</span> <span class="n">articolo</span><span class="o">.</span><span class="n">complessita</span>
+            <span class="n">testi_tot</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">complessita_media</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">complessita_totale</span><span class="o">/</span><span class="n">articoli</span><span class="o">.</span><span class="fm">__len__</span><span class="p">())</span>
+
+        <span class="c1"># Calcolo quantità media di termini per tutti i testi</span>
+        <span class="n">quantita_totale</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">articolo</span> <span class="ow">in</span> <span class="n">articoli</span><span class="p">:</span>
+            <span class="n">quantita_totale</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">articolo</span><span class="o">.</span><span class="n">quantita_termini</span><span class="p">)</span>
+        <span class="n">quantita_media</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">quantita_totale</span><span class="o">/</span><span class="n">articoli</span><span class="o">.</span><span class="fm">__len__</span><span class="p">())</span>
+
+        <span class="c1"># Calcolo frequenza media di termini per tutti i testi</span>
+        <span class="n">frequenza_totale</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">articolo</span> <span class="ow">in</span> <span class="n">articoli</span><span class="p">:</span>
+            <span class="n">frequenza_totale</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">articolo</span><span class="o">.</span><span class="n">frequenza_media</span><span class="p">)</span>
+        <span class="n">frequenza_media</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">frequenza_totale</span><span class="o">/</span><span class="n">articoli</span><span class="o">.</span><span class="fm">__len__</span><span class="p">())</span>
+
+        <span class="c1"># Ricerca dell&#39;utente che ha caricato più testi</span>
+        <span class="n">autori</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">articolo</span> <span class="ow">in</span> <span class="n">articoli</span><span class="p">:</span>
+            <span class="n">autori</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">articolo</span><span class="o">.</span><span class="n">autore</span><span class="p">)</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">autore_max</span> <span class="o">=</span> <span class="n">autori</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">autore_i</span> <span class="ow">in</span> <span class="n">autori</span><span class="p">:</span>
+            <span class="n">curr_frequency</span> <span class="o">=</span> <span class="n">autori</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">autore_i</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">curr_frequency</span> <span class="o">&gt;</span> <span class="n">counter</span><span class="p">):</span>
+                <span class="n">counter</span> <span class="o">=</span> <span class="n">curr_frequency</span>
+                <span class="n">autore_max</span> <span class="o">=</span> <span class="n">autore_i</span>
+
+        <span class="c1"># Calcolo frequenza complessiva parole</span>
+        <span class="n">termini</span> <span class="o">=</span> <span class="n">Termine</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">termini_con_frequenze</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">termine</span> <span class="ow">in</span> <span class="n">termini</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">termine</span><span class="o">.</span><span class="n">parola</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">termini_con_frequenze</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="n">termini_con_frequenze</span><span class="p">[</span><span class="n">termine</span><span class="o">.</span><span class="n">parola</span><span class="p">]</span> <span class="o">=</span> <span class="n">termine</span><span class="o">.</span><span class="n">occorrenze</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">termini_con_frequenze</span><span class="p">[</span><span class="n">termine</span><span class="o">.</span><span class="n">parola</span><span class="p">]</span> <span class="o">+=</span> <span class="n">termine</span><span class="o">.</span><span class="n">occorrenze</span>
+
+    <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">,</span> <span class="s1">&#39;termini&#39;</span><span class="p">:</span> <span class="n">termini</span><span class="p">,</span> <span class="s1">&#39;complessita_media&#39;</span><span class="p">:</span> <span class="n">complessita_media</span><span class="p">,</span>
+                <span class="s1">&#39;quantita_media&#39;</span><span class="p">:</span> <span class="n">quantita_media</span><span class="p">,</span> <span class="s1">&#39;frequenza_media&#39;</span><span class="p">:</span> <span class="n">frequenza_media</span><span class="p">,</span> <span class="s1">&#39;autore_max&#39;</span><span class="p">:</span> <span class="n">autore_max</span><span class="p">,</span>
+                <span class="s1">&#39;termini_con_frequenze&#39;</span><span class="p">:</span> <span class="n">termini_con_frequenze</span><span class="p">,</span> <span class="s1">&#39;testi_tot&#39;</span><span class="p">:</span> <span class="n">testi_tot</span><span class="p">,</span> <span class="s1">&#39;termini_tot&#39;</span><span class="p">:</span><span class="n">quantita_totale</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/statistiche_articoli.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="blacklist"><a class="viewcode-back" href="../../index.html#testo.views.blacklist">[docs]</a><span class="k">def</span> <span class="nf">blacklist</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Funzione che si occupa della aggiunta delle parole all&#39;interno della blacklist, esegue i controlli</span>
+<span class="sd">        sulla univocità dei termini, sul fatto che la blacklist sia dedicata all&#39;utente e sul fatto che il</span>
+<span class="sd">        termine sia già presente all&#39;interno della blacklist</span>
+<span class="sd">        :return  messaggio da fare vedere i risultati di ricerca sul successo del dato o messaggio errore su dati sbagliati</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">BlacklistForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;[@_!#$%^&amp;*()&lt;&gt;?/\|}{~: ]&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;termine_bl&#39;</span> <span class="p">])</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">check_rex</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">check_rex</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()</span> <span class="ow">and</span> <span class="n">check_rex</span> <span class="ow">and</span> <span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;termine_bl&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+            <span class="n">id_utente</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+            <span class="n">termine_bl</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;termine_bl&#39;</span><span class="p">]</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">Blacklist</span><span class="p">(</span><span class="n">termine_bl</span><span class="o">=</span><span class="n">termine_bl</span><span class="p">,</span> <span class="n">id_utente</span><span class="o">=</span><span class="n">id_utente</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">save</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Il salvataggio ha avuto successo!&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="s1">&#39;Salvataggio fallito! Il termine è gia presente nella blacklist&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;testo:user-blacklist&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;Salvataggio fallito! Hai inserito un termine vuoto o con caratteri speciali. Riprova&#39;</span><span class="p">)</span>
+            <span class="n">form</span> <span class="o">=</span> <span class="n">BlacklistForm</span><span class="p">()</span>
+
+    <span class="n">blacklist</span> <span class="o">=</span> <span class="n">Blacklist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id_utente</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">logged_user_username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;blacklist&#39;</span><span class="p">:</span> <span class="n">blacklist</span><span class="p">,</span> <span class="s1">&#39;logged_user_username&#39;</span><span class="p">:</span> <span class="n">logged_user_username</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;testo/blacklist.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="blacklist_delete"><a class="viewcode-back" href="../../index.html#testo.views.blacklist_delete">[docs]</a><span class="k">def</span> <span class="nf">blacklist_delete</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">termine_bl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Funzione che si occupa della eliminazione dei termini all&#39;interno della blacklist</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">id_utente</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+    <span class="n">Blacklist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">termine_bl</span><span class="o">=</span><span class="n">termine_bl</span><span class="p">,</span> <span class="n">id_utente</span><span class="o">=</span><span class="n">id_utente</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;testo:user-blacklist&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">analisitesto 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, team2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>

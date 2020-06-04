@@ -1,0 +1,414 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Welcome to analisitesto’s documentation! &#8212; analisitesto 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">analisitesto 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to analisitesto’s documentation!</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#module-testo.views">Testo views documentation!</a></li>
+<li><a class="reference internal" href="#module-testo.models">Testo models documentation!</a></li>
+<li><a class="reference internal" href="#module-testo.forms">Testo forms documentation!</a></li>
+<li><a class="reference internal" href="#module-testo.elaborate_text">Elaborate testo documentation!</a></li>
+<li><a class="reference internal" href="#module-testo.tests.test_elaborate_text">Tests documentation!</a></li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-analisitesto-s-documentation">
+<h1>Welcome to analisitesto’s documentation!<a class="headerlink" href="#welcome-to-analisitesto-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="module-testo.views">
+<span id="testo-views-documentation"></span><h1>Testo views documentation!<a class="headerlink" href="#module-testo.views" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="testo.views.ProfileTextTable">
+<em class="property">class </em><code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">ProfileTextTable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">order_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">orderable</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">empty_text</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">row_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pinned_row_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sequence</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">prefix</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">order_by_field</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">page_field</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">per_page_field</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">template_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">request</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_header</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_footer</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">extra_columns</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#ProfileTextTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.ProfileTextTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Definisce una tabella personalizzata per visualizzare i testi inseriti dall’utente attualmente loggato</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="testo.views.ResultsTable">
+<em class="property">class </em><code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">ResultsTable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">order_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">orderable</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">empty_text</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">row_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pinned_row_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sequence</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">prefix</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">order_by_field</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">page_field</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">per_page_field</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">template_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">request</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_header</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_footer</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">extra_columns</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#ResultsTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.ResultsTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Definisce tabella personalizzata per visualizzare i risultati della ricerca</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="testo.views.ResultsTableCompare">
+<em class="property">class </em><code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">ResultsTableCompare</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">order_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">orderable</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">empty_text</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">row_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pinned_row_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sequence</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">prefix</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">order_by_field</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">page_field</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">per_page_field</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">template_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">request</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_header</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_footer</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">extra_columns</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#ResultsTableCompare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.ResultsTableCompare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Definisce tabella personalizzata per visualizzare i risultati della ricerca del primo articolo da comparare</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="testo.views.ResultsTableCompare2">
+<em class="property">class </em><code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">ResultsTableCompare2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">order_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">orderable</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">empty_text</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">row_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pinned_row_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sequence</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">prefix</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">order_by_field</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">page_field</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">per_page_field</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">template_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">request</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_header</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_footer</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">extra_columns</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#ResultsTableCompare2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.ResultsTableCompare2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Definisce tabella personalizzata per visualizzare i risultati della ricerca del secondo articolo da comparare</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.articolo_delete">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">articolo_delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#articolo_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.articolo_delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Elimina il testo corrispondente alla riga in cui viene premuto il tasto delete nella pagina che mostra la
+tabella contenente i testi dell’utente attualmente loggato.
+:return: Ritorna la stessa pagina aggiornata</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.articolo_details">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">articolo_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#articolo_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.articolo_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renderizza la pagina dei dettagli in seguito al click su un risultato di ricerca
+che mostra il grafico , frequenza media e complessità
+:param request: id
+:return: Ritorna la pagina renderizzata</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.articolo_insert">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">articolo_insert</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#articolo_insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.articolo_insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Richiesta di inserimento articolo con i vari fields</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>list</em>) – con i dati ricevuti dal utente</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>messaggio sul successo del dato o errore su dati sbagliati</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>basestring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.articolo_meta_search">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">articolo_meta_search</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#articolo_meta_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.articolo_meta_search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Richiesta per la ricerca del articolo da visulaizare</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>list</em>) – con i dati ricevuti dal utente per fare la ricerca</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>da fare vedere i risultati di ricerca sul successo del dato o messaggio errore su dati sbagliati</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>render</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.blacklist">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">blacklist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#blacklist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.blacklist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Funzione che si occupa della aggiunta delle parole all’interno della blacklist, esegue i controlli
+sulla univocità dei termini, sul fatto che la blacklist sia dedicata all’utente e sul fatto che il
+termine sia già presente all’interno della blacklist
+:return  messaggio da fare vedere i risultati di ricerca sul successo del dato o messaggio errore su dati sbagliati</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.blacklist_delete">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">blacklist_delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">termine_bl</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#blacklist_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.blacklist_delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Funzione che si occupa della eliminazione dei termini all’interno della blacklist</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.compare_details">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">compare_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id1</span></em>, <em class="sig-param"><span class="n">id2</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#compare_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.compare_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Funzione che si occupa della rappresentazione dei dettagli nella pagina del confronto</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.homepage">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">homepage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#homepage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.homepage" title="Permalink to this definition">¶</a></dt>
+<dd><p>homepage la pagina principale</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.loaded_text_view">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">loaded_text_view</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#loaded_text_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.loaded_text_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>funzione che si occupa della visualizzazione dei testi caricati dall’utente</p>
+<p>:return tutti i testi caricati dall’utente loggato</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.logout">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">logout</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#logout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>funzione che si occupa del processo di logout dell’utente</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.profile_view">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">profile_view</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#profile_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.profile_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>funzione che si occupa della visualizzazione del profilo utente e gestione degli termini della balcklist e
+cnacelazionde degli articoli</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.register">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Funzione che si occupa della registrazione dell’utente all’interno della piattaforma e gestisce
+anche il processo di login</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.statistiche_articoli">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">statistiche_articoli</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#statistiche_articoli"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.statistiche_articoli" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mostra le statistiche su tutti i testi e termini presenti nel database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>ritorna la pagina renderizzata</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>render</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="testo.views.translate_termine">
+<code class="sig-prename descclassname">testo.views.</code><code class="sig-name descname">translate_termine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">id_term</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/views.html#translate_termine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.views.translate_termine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Google ha impostato delle limitazioni sull’utilizzo del servizio, quindi occorre evitare di
+sovraccaricare il server di richieste traduzione dei termini</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-testo.models">
+<span id="testo-models-documentation"></span><h1>Testo models documentation!<a class="headerlink" href="#module-testo.models" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="testo.models.Articolo">
+<em class="property">class </em><code class="sig-prename descclassname">testo.models.</code><code class="sig-name descname">Articolo</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/models.html#Articolo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.models.Articolo" title="Permalink to this definition">¶</a></dt>
+<dd><p>modello per articolo con i diversi attributi</p>
+<dl class="py exception">
+<dt id="testo.models.Articolo.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#testo.models.Articolo.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt id="testo.models.Articolo.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#testo.models.Articolo.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="testo.models.Blacklist">
+<em class="property">class </em><code class="sig-prename descclassname">testo.models.</code><code class="sig-name descname">Blacklist</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/models.html#Blacklist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.models.Blacklist" title="Permalink to this definition">¶</a></dt>
+<dd><p>modello per la blacklist dei termini di un utente</p>
+<dl class="py exception">
+<dt id="testo.models.Blacklist.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#testo.models.Blacklist.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt id="testo.models.Blacklist.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#testo.models.Blacklist.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="testo.models.Blacklist.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/models.html#Blacklist.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.models.Blacklist.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Controllo che il termine sia già presente all’interno della tabella del database</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="testo.models.Termine">
+<em class="property">class </em><code class="sig-prename descclassname">testo.models.</code><code class="sig-name descname">Termine</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/models.html#Termine"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.models.Termine" title="Permalink to this definition">¶</a></dt>
+<dd><p>modello per i termini e le relative frequenze</p>
+<dl class="py exception">
+<dt id="testo.models.Termine.DoesNotExist">
+<em class="property">exception </em><code class="sig-name descname">DoesNotExist</code><a class="headerlink" href="#testo.models.Termine.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt id="testo.models.Termine.MultipleObjectsReturned">
+<em class="property">exception </em><code class="sig-name descname">MultipleObjectsReturned</code><a class="headerlink" href="#testo.models.Termine.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-testo.forms">
+<span id="testo-forms-documentation"></span><h1>Testo forms documentation!<a class="headerlink" href="#module-testo.forms" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="testo.forms.ArticoloForm">
+<em class="property">class </em><code class="sig-prename descclassname">testo.forms.</code><code class="sig-name descname">ArticoloForm</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">files=None</em>, <em class="sig-param">auto_id='id_%s'</em>, <em class="sig-param">prefix=None</em>, <em class="sig-param">initial=None</em>, <em class="sig-param">error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em class="sig-param">label_suffix=None</em>, <em class="sig-param">empty_permitted=False</em>, <em class="sig-param">instance=None</em>, <em class="sig-param">use_required_attribute=None</em>, <em class="sig-param">renderer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/forms.html#ArticoloForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.forms.ArticoloForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>form per articolo con i diversi field e insieme a crispy</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="testo.forms.ArticoloSearchForm">
+<em class="property">class </em><code class="sig-prename descclassname">testo.forms.</code><code class="sig-name descname">ArticoloSearchForm</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">files=None</em>, <em class="sig-param">auto_id='id_%s'</em>, <em class="sig-param">prefix=None</em>, <em class="sig-param">initial=None</em>, <em class="sig-param">error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em class="sig-param">label_suffix=None</em>, <em class="sig-param">empty_permitted=False</em>, <em class="sig-param">field_order=None</em>, <em class="sig-param">use_required_attribute=None</em>, <em class="sig-param">renderer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/forms.html#ArticoloSearchForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.forms.ArticoloSearchForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>form viene customization e generato da django con i vari controlli</p>
+<dl class="py method">
+<dt id="testo.forms.ArticoloSearchForm.is_valid">
+<code class="sig-name descname">is_valid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/forms.html#ArticoloSearchForm.is_valid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.forms.ArticoloSearchForm.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the form has no errors, or False otherwise.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="testo.forms.BlacklistForm">
+<em class="property">class </em><code class="sig-prename descclassname">testo.forms.</code><code class="sig-name descname">BlacklistForm</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">files=None</em>, <em class="sig-param">auto_id='id_%s'</em>, <em class="sig-param">prefix=None</em>, <em class="sig-param">initial=None</em>, <em class="sig-param">error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em class="sig-param">label_suffix=None</em>, <em class="sig-param">empty_permitted=False</em>, <em class="sig-param">field_order=None</em>, <em class="sig-param">use_required_attribute=None</em>, <em class="sig-param">renderer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/forms.html#BlacklistForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.forms.BlacklistForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>form per inserire dati nella blacklist</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="testo.forms.RegisterForm">
+<em class="property">class </em><code class="sig-prename descclassname">testo.forms.</code><code class="sig-name descname">RegisterForm</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/forms.html#RegisterForm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.forms.RegisterForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Form di registrazione per l’utente</p>
+<dl class="py method">
+<dt id="testo.forms.RegisterForm.clean_email">
+<code class="sig-name descname">clean_email</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/forms.html#RegisterForm.clean_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.forms.RegisterForm.clean_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Controllo che l’email non sia presa da alcun utente</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-testo.elaborate_text">
+<span id="elaborate-testo-documentation"></span><h1>Elaborate testo documentation!<a class="headerlink" href="#module-testo.elaborate_text" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="testo.elaborate_text.Text_elaborator">
+<em class="property">class </em><code class="sig-prename descclassname">testo.elaborate_text.</code><code class="sig-name descname">Text_elaborator</code><a class="reference internal" href="_modules/testo/elaborate_text.html#Text_elaborator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.elaborate_text.Text_elaborator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Classe che tokenizza il testo, elimina le stopword, estrae i dati necessari ed esegue il calcolo della complessità</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-testo.tests.test_elaborate_text">
+<span id="tests-documentation"></span><h1>Tests documentation!<a class="headerlink" href="#module-testo.tests.test_elaborate_text" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="testo.tests.test_elaborate_text.Elaborate_Text_Test">
+<em class="property">class </em><code class="sig-prename descclassname">testo.tests.test_elaborate_text.</code><code class="sig-name descname">Elaborate_Text_Test</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/tests/test_elaborate_text.html#Elaborate_Text_Test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.tests.test_elaborate_text.Elaborate_Text_Test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test della complessità con una singola parola lunga (con gli algoritmi di calcolo della complessità
+utilizzati in precedenza il test falliva)</p>
+</dd></dl>
+
+<span class="target" id="module-testo.tests.test_forms"></span><dl class="py class">
+<dt id="testo.tests.test_forms.Testo_Forms_Test">
+<em class="property">class </em><code class="sig-prename descclassname">testo.tests.test_forms.</code><code class="sig-name descname">Testo_Forms_Test</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/tests/test_forms.html#Testo_Forms_Test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.tests.test_forms.Testo_Forms_Test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Un test viene eseguendo un set di funzionalità per la nostra applicazione.per verificare Il corretto sviluppo
+dei casi di test trova problemi nella funzionalità di un’applicazione.
+con form test servono per vedere se i dati  messi negli fields sono giusti o se ci sono dei problemi</p>
+</dd></dl>
+
+<span class="target" id="module-testo.tests.test_models"></span><dl class="py class">
+<dt id="testo.tests.test_models.Testo_Models_Test">
+<em class="property">class </em><code class="sig-prename descclassname">testo.tests.test_models.</code><code class="sig-name descname">Testo_Models_Test</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/tests/test_models.html#Testo_Models_Test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.tests.test_models.Testo_Models_Test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Un test viene eseguendo un set di funzionalità per la nostra applicazione.per verificare Il corretto sviluppo
+dei casi di test trova problemi nella funzionalità di un’applicazione.</p>
+<dl class="py method">
+<dt id="testo.tests.test_models.Testo_Models_Test.setUp">
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/tests/test_models.html#Testo_Models_Test.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.tests.test_models.Testo_Models_Test.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>I metodi setUp () consentono di definire istruzioni che verranno eseguite prima e dopo ciascun metodo di prova</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-testo.tests.test_views"></span><dl class="py class">
+<dt id="testo.tests.test_views.TestViewsTesto">
+<em class="property">class </em><code class="sig-prename descclassname">testo.tests.test_views.</code><code class="sig-name descname">TestViewsTesto</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/tests/test_views.html#TestViewsTesto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.tests.test_views.TestViewsTesto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Un test viene eseguendo un set di funzionalità per la nostra applicazione.per verificare Il corretto sviluppo
+dei casi di test trova problemi nella funzionalità di un’applicazione.</p>
+<dl class="py method">
+<dt id="testo.tests.test_views.TestViewsTesto.setUp">
+<code class="sig-name descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/testo/tests/test_views.html#TestViewsTesto.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#testo.tests.test_views.TestViewsTesto.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">analisitesto 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, team2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>

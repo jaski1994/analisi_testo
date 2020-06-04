@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Risultati confronta{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-md-2">
+
+        <a href="{% url 'testo:articolo-compare' %}"><button class="btn btn-primary" type="submit" >Torna alla comparazione</button></a>
+        <br> <br>
+
+        <table style="width:100%">
+            <tr style="vertical-align: top;">
+                <td style="width:50%; text-align: center">
+                    <div>
+                        <div class="container-fluid" id="div-details" style="text-align: center">
+                            <h2 style="text-align: center">{{ articolo1.titolo }}</h2>
+                            <h3>Complessità: {{ articolo1.complessita }}</h3>
+                            <p>Fonte: {{ articolo1.fonte }}</p>
+                            <p>Autore: {{ articolo1.autore }}</p>
+                            <p>Data: {{ articolo1.data }}</p>
+                            <p>Data inserimento: {{ articolo1.data_caricamento }}</p>
+                            <p>Quantità termini: {{ articolo1.quantita_termini }}</p>
+                            <p>Frequenza media: {{ articolo1.frequenza_media }}</p>
+                        </div>
+                    </div>
+                    <br>
+                </td>
+                <td style="width:50%; text-align: center">
+                    <div>
+                        <div class="container-fluid" id="div-details" style="text-align: center">
+                            <h2 style="text-align: center">{{ articolo2.titolo }}</h2>
+                            <h3>Complessità: {{ articolo2.complessita }}</h3>
+                            <p>Fonte: {{ articolo2.fonte }}</p>
+                            <p>Autore: {{ articolo2.autore }}</p>
+                            <p>Data: {{ articolo2.data }}</p>
+                            <p>Data inserimento: {{ articolo2.data_caricamento }}</p>
+                            <p>Quantità termini: {{ articolo2.quantita_termini }}</p>
+                            <p>Frequenza media: {{ articolo2.frequenza_media }}</p>
+                        </div>
+                    </div>
+                    <br>
+                </td>
+            </tr>
+            <tr style="vertical-align: top;">
+                <td>
+                    <table class="table table-striped table-bordered table-sm" data-toggle="table" style="width: 99%" id="dtTab1">
+                        <thead>
+                        <tr>
+                            <th scope="col" data-sortable="true">Parola</th>
+                            <th scope="col" data-sortable="true">Frequenza</th>
+                            <th scope="col">Traduzione</th>
+                            <th scope="col">Sinonimi</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in termini1 %}
+                            {% if row.parola not in blacklist_utente %}
+                                <tr>
+                                    <td scope="row" style="width: 55%">{{ row.parola }}</td>
+                                    <td style="width: 30%">{{ row.occorrenze }}</td>
+                                    <!-- Passare alla pagina di traduzione il termine da tradurre-->
+                                    <td style="width: 15%">
+                                        <a class="btn btn-info btn-sm" href="{% url 'testo:translate-termine' row.id %}">Traduci</a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-info btn-sm" href="{% url 'testo:sinonimi' row.id %}">Sinonimi</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+                <td>
+                    <table class="table table-striped table-bordered table-sm" data-toggle="table" style="width: 99%" id="dtTab2">
+                        <thead>
+                        <tr>
+                            <th scope="col" data-sortable="true">Parola</th>
+                            <th scope="col" data-sortable="true">Frequenza</th>
+                            <th scope="col">Traduzione</th>
+                            <th scope="col">Sinonimi</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in termini2 %}
+                            {% if row.parola not in blacklist_utente %}
+                                <tr>
+                                    <td scope="row" style="width: 55%">{{ row.parola }}</td>
+                                    <td style="width: 30%">{{ row.occorrenze }}</td>
+                                    <!-- Passare alla pagina di traduzione il termine da tradurre-->
+                                    <td style="width: 15%">
+                                        <a class="btn btn-info btn-sm" href="{% url 'testo:translate-termine' row.id %}">Traduci</a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-info btn-sm" href="{% url 'testo:sinonimi' row.id %}">Sinonimi</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dtTab1').DataTable({
+                "aaSorting": [[0, 'asc']],
+                "ordering": true,
+                "bLengthChange": false,
+                "paging": false,
+                "autoWidth": false,
+                "bSortable": true,
+                "bFilter": true,
+                "info": false,
+                "aoColumnDefs": [
+                    { "aTargets": [ 0 ], "bSortable": true },
+                    { "aTargets": [ 1 ], "bSortable": true }
+                ]
+            });
+
+            $('#dtTab2').DataTable({
+                "aaSorting": [[0, 'asc']],
+                "ordering": true,
+                "bLengthChange": false,
+                "paging": false,
+                "autoWidth": false,
+                "bSortable": true,
+                "bFilter": true,
+                "info": false,
+                "aoColumnDefs": [
+                    { "aTargets": [ 0 ], "bSortable": true },
+                    { "aTargets": [ 1 ], "bSortable": true }
+                ]
+            });
+        });
+    </script>
+
+{% endblock %}

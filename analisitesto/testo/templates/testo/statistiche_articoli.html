@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Dati sui termini di tutti gli articoli{% endblock %}
+
+{% block content %}
+
+    <!-- Visualizzazione dei dati sui testi memorizzati nel database -->
+    <div class="container-fluid" id="div-details" style="text-align: center">
+        <h3 style="padding-top: 10px">Statistiche testi</h3>
+        <br>
+        <span>Complessità media</span>
+        <p style="font-size:100px">{{ complessita_media }}</p>
+    </div>
+
+
+    <div class="container" id="div-metadata" style="text-align: center">
+        <form>
+            <div class="form-row">
+                <div class="form-group col-md-2">
+
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="source-out">
+                        Quantità media termini differenti <br>
+                        presenti in un testo</label>
+                    <br>
+                    <input type="text" id="source-out" disabled value="{{ quantita_media }}" style="width: 90%; text-align: center">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="date-out">
+                        Frequenza media dei termini <br>
+                        in tutti i testi</label>
+                    <br>
+                    <input type="text" id="date-out" disabled value="{{ frequenza_media }}" style="width: 90%; text-align: center">
+                </div>
+                <div class="form-group col-md-2">
+
+                </div>
+            </div>
+            <br>
+            <div class="form-row" style="text-align: center">
+                <div class="form-group col-md-4">
+                    <label for="qnt-out">Numero totale di testi</label>
+                    <br>
+                    <input type="text" id="qnt-out" disabled value="{{ testi_tot }}" style="text-align: center">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="qnt-out">Utente che ha caricato più testi</label>
+                    <br>
+                    <input type="text" id="qnt-out" disabled value="{{ autore_max }}" style="text-align: center">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="qnt-out">Numero totale di termini</label>
+                    <br>
+                    <input type="text" id="qnt-out" disabled value="{{ termini_tot }}" style="text-align: center">
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Visualizzazione di una tabella con i termini e le relative frequenze -->
+    <div id="tab-terms-list" class="container">
+        <br>
+        <h4>Elenco termini presenti in tutti i testi:</h4>
+        <table class="table table-striped table-bordered table-sm" data-toggle="table" id="dtTab" style="width: 99%">
+            <thead>
+            <tr>
+                <th scope="col" data-sortable="true">Parola</th>
+                <th scope="col" data-sortable="true">Frequenza</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for termine, occorrenza in termini_con_frequenze.items %}
+                <tr>
+                    <td scope="row">{{ termine }}</td>
+                    <td scope="row">{{ occorrenza }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dtTab').DataTable({
+                "aaSorting": [[0, 'asc']],
+                "ordering": true,
+                "bLengthChange": false,
+                "paging": false,
+                "autoWidth": false,
+                "bSortable": true,
+                "info": false,
+                "aoColumnDefs": [
+                    { "aTargets": [ 0 ], "bSortable": true },
+                    { "aTargets": [ 1 ], "bSortable": true }
+                ]
+            });
+
+        });
+    </script>
+
+{% endblock %}
+
