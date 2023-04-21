@@ -7,6 +7,6 @@ joblib==0.14.1
 nltk==3.5
 pytz==2020.1
 regex==2020.5.7
-sqlparse==0.3.1
+sqlparse==0.4.4
 tqdm==4.46.0
 Sphinx==3.0.3
